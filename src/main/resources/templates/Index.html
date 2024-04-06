@@ -1,0 +1,589 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Microblogging App</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <style>
+        .toaster {
+            display: none;
+            position: fixed;
+            top: 20px; /* Adjust top position as needed */
+            left: 60%;
+            transform: translateX(-50%);
+            background-color: #fff; /* Set background color to white */
+            color: #000; /* Set text color to black */
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            width: 400px; /* Adjust the width as needed */
+            overflow: auto; /* Enable scrolling if needed */
+        }
+        .toaster2 {
+            display: none;
+            position: fixed;
+            top: 20px; /* Adjust top position as needed */
+            left: 38%;
+            transform: translateX(-50%);
+            background-color: #fff; /* Set background color to white */
+            color: #000; /* Set text color to black */
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            width: 400px; /* Adjust the width as needed */
+            overflow: auto; /* Enable scrolling if needed */
+        }
+
+        .toast-content {
+            position: relative;
+            text-align: center; /* Center align the content */
+        }
+
+        .close {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            cursor: pointer;
+        }
+
+        .follower {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .follower-name {
+            margin-right: auto; /* Push follower name to the left */
+        }
+
+        .follow-button {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .profile-picture {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+
+        .counts h3 {
+            margin: 5px 0;
+        }
+
+
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%; /* Make it round */
+            overflow: hidden; /* Clip the image to the border-radius */
+            background-color: #ddd; /* Fallback background color */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-picture {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Cover the entire container */
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #1DA1F2;
+            color: white;
+            padding: 5px;
+            text-align: center;
+        }
+        .navbar-nav .nav-link {
+            font-family: cursive;
+        }
+
+        nav {
+            background-color: #1DA1F2;
+            color: white;
+            padding: 1px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-right: 20px;
+        }
+
+        nav ul li:last-child {
+            margin-right: 0;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+
+        section {
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            width: 80%;
+        }
+
+        .tweet {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            background-color: white;
+            color: black;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .dashboard {
+            width: 100%;
+            max-width: 60%;
+            margin: 0 auto;
+            padding: 20px;
+
+        }
+
+        .messages {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 20px;
+        }
+
+        .message {
+            background-color: #fff;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+
+        .message p {
+            margin: 0;
+        }
+
+        h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .container {
+            /*border: 2px solid #dedede;*/
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        /* Darker chat container */
+        .darker {
+            border-color: #ccc;
+            background-color: #ddd;
+        }
+
+        /* Clear floats */
+        .container::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        /* Style images */
+        .container img {
+            float: left;
+           /* max-width: 60px;*/
+            width: 100%;
+          /*  margin-right: 20px;
+            border-radius: 50%;*/
+        }
+
+        /* Style the right image */
+        .container img.right {
+            float: right;
+            margin-left: 20px;
+            margin-right:0;
+        }
+
+        /* Style time text */
+        .time-right {
+            float: right;
+            color: #aaa;
+        }
+
+        /* Style time text */
+        .time-left {
+            float: left;
+            color: #999;
+        }
+        .username {
+            color: black;
+            font-family: "Your Font Name", cursive; /* Replace "Your Font Name" with the name of the font you want to use */
+        }
+        .bold-font {
+            font-weight: bold;
+            font-family: 'Times New Roman', serif;
+        }
+        .font{
+            font-family: 'Times New Roman', serif;
+        }
+        .popup-container {
+            display: none;
+            position: fixed;
+            top: 21%;
+            left: 61%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+        }
+        .popup-container2 {
+            display: none;
+            position: fixed;
+            top: 21%;
+            left: 31%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            z-index: 9999;
+        }
+        /* Text input */
+        .popup-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: none; /* Prevent textarea from being resizable */
+        }
+
+        /* Post button */
+        .popup-button {
+            padding: 10px 20px;
+            background-color: #1DA1F2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Close button */
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+            background-color: white;
+            border-radius: 50%;
+        }
+
+    </style>
+</head>
+<body>
+
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary" th:if="${session.userId}">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/index">
+                        <!-- Insert the SVG code here -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-house-door-fill" viewBox="0 0 16 16">
+                            <path d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5"/>
+                        </svg>
+                        <!-- End of SVG code -->
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/Indexpopup">
+                        <!-- Insert the SVG code here -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                        </svg>
+                        <!-- End of SVG code -->
+                    </a>
+                </li>
+                <!--     <li class="nav-item">
+                         <a class="nav-link active" aria-current="page" href="/users">My following</a>
+                     </li>-->
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" onclick="toggleToasters()">
+                        <!-- Insert the SVG code for the person icon here -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+                            <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
+                        </svg>
+
+
+                        <!-- End of SVG code for the person icon -->
+                    </a>
+
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" onclick="togglePopup()">
+                        <!-- Insert the SVG code for the person icon here -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16">
+                            <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471z"/>
+                        </svg>
+
+
+                        <!-- End of SVG code for the person icon -->
+                    </a>
+
+                </li>
+
+                </ul>
+            <ul class=" nav navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item active">
+                    <a class="navbar-brand" href="#">S N A P F E E D</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li>
+                    <a class="nav-link active" aria-current="page" href="/logout">
+                        <!-- Insert the SVG code for the signpost icon here -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-signpost-fill" viewBox="0 0 16 16">
+                            <path d="M7.293.707A1 1 0 0 0 7 1.414V4H2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h5v6h2v-6h3.532a1 1 0 0 0 .768-.36l1.933-2.32a.5.5 0 0 0 0-.64L13.3 4.36a1 1 0 0 0-.768-.36H9V1.414A1 1 0 0 0 7.293.707"/>
+                        </svg>
+                        <!-- End of SVG code for the signpost icon -->
+                    </a>
+
+                </li>
+
+                <!--<li>   <a href="/me" class="username" th:text="${session.name}" style="text-decoration: none;"></a></li>-->
+
+                <!--      <li>
+                          <a href="/logout" class="btn btn-dark">Logout</a>
+                              </li>-->
+
+
+            </ul>
+        </div>
+        </ul>
+    </div>
+    </div>
+</nav>
+
+<div class="dashboard" th:if="${session.userId}">
+    <div class="messahello, im khabib goodges" style="box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+        <!-- <h2>For you</h2>-->
+
+
+
+        <div class="message" th:each="tweetandpost : ${tweetsandposts}">
+
+            <p th:unless="${tweetandpost != null and tweetandpost.name != null}">Nothing to show.</p>
+
+
+            <div class="container " >
+                <i class="profile-icon">
+                    <img th:if="${tweetandpost.tweetid}" th:src="@{${'/display?id=' + tweetandpost.getUserid()}}" alt="Profile Picture" class="profile-picture" />
+                </i>
+                <i class="profile-icon">
+                    <img th:if="${tweetandpost.postid}" th:src="@{${'/display?id=' + tweetandpost.getUserid()}}" alt="Profile Picture" class="profile-picture" />
+                </i>
+                <h5 th:if="${tweetandpost.tweetid}" th:text="${tweetandpost.name}" th:class="${'bold-font'}"></h5>
+                <p th:if="${tweetandpost.tweetid}" th:text="${tweetandpost.content}" th:class="${'font'}"> </p>
+                <h5 th:if="${tweetandpost.postid}" th:text="${tweetandpost.name}" th:class="${'font'}"></h5>
+                <i class="post" th:if="${tweetandpost.postid}">
+                    <img th:src="@{${'/displaypost?id=' + tweetandpost.postid}}" alt="Post" class="post" />
+                    <p th:text="${tweetandpost.caption}" th:class="${'font'}"></p>
+                </i>
+                <span class="time-right" th:text="${tweetandpost.getTimeago()}"></span>
+            </div>
+
+
+
+        </div>
+
+        <!-- More messages go here -->
+    </div>
+</div>
+    <div id="toaster" class="toaster">
+        <div class="toast-content">
+            <h3>Followers</h3>
+            <span class="close" onclick="closeToaster('toaster')">×</span>
+            <div id="followersList" th:each="follower : ${myfollowers}">
+                <div class="follower">
+                    <i class="profile-icon">
+                        <img th:src="@{${'/display?id=' + follower.getId()}}" alt="Profile Picture" class="profile-picture" />
+                    </i>
+
+                    <span class="follower-name" th:text="${follower.getName()}"></span>
+                    <form th:action="@{'/follow?id=' + ${follower.id} + '&followed=' + ${follower.followed}}" method="get">
+                        <input type="hidden" name="id" th:value="${follower.getId()}" />
+                        <input type="hidden" name="name" th:value="${follower.getName()}" />
+                        <!-- Add more hidden input fields for other properties of the user object -->
+                        <input type="hidden" name="followed" th:value="${follower.isFollowed()}" />
+                    <button type="submit" class="follow-button" th:text="${follower.isFollowed() ? 'Following' : 'Follow'}"></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<div id="toaster2" class="toaster2">
+    <div class="toast-content">
+        <h3>Following</h3>
+        <span class="close" onclick="closeToaster('toaster2')">×</span>
+        <div id="followingList" th:each="follower : ${myfollowing}">
+            <div class="follower">
+                <i class="profile-icon">
+                    <img th:src="@{${'/display?id=' + follower.getId()}}" alt="Profile Picture" class="profile-picture" />
+                </i>
+
+                <span class="follower-name" th:text="${follower.getName()}"></span>
+                <form th:action="@{'/follow?id=' + ${follower.id} + '&followed=' + ${follower.followed}}" method="get">
+                    <input type="hidden" name="id" th:value="${follower.getId()}" />
+                    <input type="hidden" name="name" th:value="${follower.getName()}" />
+
+                    <input type="hidden" name="followed" th:value="${follower.isFollowed()}" />
+                    <button type="submit" class="follow-button" th:text="${follower.isFollowed() ? 'Following' : 'Follow'}"></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="popup" class="popup-container">
+    <!-- Close button -->
+    <span class="popup-close" onclick="togglePopupclose('popup')">&times;</span>
+
+
+    <form id="tweetForm" action="/posttweet" method="post">
+        <textarea id="tweetInput" name="tweetContent" class="popup-input" placeholder="What's happening?" oninput="adjustTextarea(event)"></textarea>
+
+        <!-- Post button -->
+        <button type="submit" class="popup-button">Post</button>
+    </form>
+</div>
+<div id="popup2" class="popup-container2">
+    <span class="popup-close" onclick="togglePopupclose('popup2')">&times;</span>
+    <form action="/addpost" method="post"  enctype="multipart/form-data">
+
+    <label for="fileInput" class="custom-file-button">
+        <!-- Icon goes here --><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-upload" viewBox="0 0 16 16">
+            <path d="M8.356 1.68a.645.645 0 0 1 .648.633l.005.063v7.677l2.536-2.5a.646.646 0 0 1 .898.931l-3.39 3.346a.646.646 0 0 1-.89 0l-3.39-3.346a.646.646 0 1 1 .898-.93l2.536 2.5V2.377a.645.645 0 0 1 .64-.646zM2.88 11.237a2.88 2.88 0 1 1 5.76 0 2.88 2.88 0 0 1-5.76 0z"/>
+            <path fill-rule="evenodd" d="M4.646 5.646a.5.5 0 0 1 .708 0L8 8.293l2.646-2.647a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 0-.708z"/>
+        </svg>
+        select from device
+    </label>
+    <!-- File input -->
+    <input type="file" id="fileInput" class="popup-file-input" accept=".png, .jpg, .jpeg" name="file">
+
+        <textarea id="captionInput" class="popup-input" placeholder="Write your caption..." name="caption"></textarea>
+    <!-- Post button -->
+    <button  class="popup-button">Post</button>
+    </form>
+</div>
+
+
+    <script>
+    // Simulating some data
+
+    // Function to show popup
+    function toggleToasters() {
+        var toaster1 = document.getElementById("toaster");
+        var toaster2 = document.getElementById("toaster2");
+
+        // Toggle display of the first toaster
+        if (toaster1.style.display === "none") {
+            toaster1.style.display = "block";
+        } else {
+            toaster1.style.display = "none";
+        }
+
+        // Toggle display of the second toaster
+        if (toaster2.style.display === "none") {
+            toaster2.style.display = "block";
+        } else {
+            toaster2.style.display = "none";
+        }
+        }
+    function closeToaster(toasterId) {
+        document.getElementById(toasterId).style.display = "none";
+    }
+   // function togglePopup() {
+     //   var popup = document.getElementById("popup");
+       // popup.style.display = (popup.style.display === "none") ? "block" : "none";
+   // }
+
+
+    function adjustTextarea(event) {
+        var textarea = event.target;
+        textarea.style.height = "auto"; // Reset height
+        textarea.style.height = textarea.scrollHeight + "px"; // Set new height based on content
+    }
+function togglePopup(){
+    var popup = document.getElementById("popup");
+    var popup2 = document.getElementById("popup2");
+
+    if (popup.style.display === "none") {
+        popup.style.display = "block";
+    } else {
+        popup.style.display = "none";
+    }
+
+    // Toggle display of the second toaster
+    if (popup2.style.display === "none") {
+        popup2.style.display = "block";
+    } else {
+        popup2.style.display = "none";
+    }
+
+}
+    function togglePopupclose(popupId) {
+        document.getElementById(popupId).style.display = "none";
+    }
+    </script>
+
+
+<footer>
+
+</footer>
+</body>
+</html>
+

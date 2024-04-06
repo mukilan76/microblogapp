@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Followers List</title>
+    <style>body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: #fafafa;
+    }
+
+    .container {
+        column
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top: 20px;
+        min-height: 100vh; /* Ensure the container takes up the full viewport height */
+    }
+
+    .followers-list {
+        width: 600px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: flex; /* Ensure the container is a flex container */
+        flex-direction: column; /* Set the flex direction to column */
+        align-items: flex-start; /* Align items to the start of the container */
+    }
+
+    .follower-item {
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #eee;
+        padding: 10px 0;
+    }
+
+    .profile-name {
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    .follow-button {
+        padding: 8px 16px; /* Adjusted padding for smaller buttons */
+        background-color: #3897f0;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        font-weight: bold;
+    }
+
+    .follow-button:hover {
+        background-color: #2874e0;
+    }
+
+    .profile-icon {
+        margin-right: 10px;
+    }
+
+    .profile-picture {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+
+    </style>
+</head>
+<body>
+<div  class="container" >
+    <div th:each="follow : ${followings}"class="followers-list">
+        <div class="follower-item">
+            <i class="profile-icon">
+                <img th:src="@{${'/display?id=' + follow.getId()}}" alt="Profile Picture" class="profile-picture" />
+            </i>
+            <div th:text="${follow.getName()}" class="profile-name"></div>
+            <form th:action="@{'/follow?id=' + ${follow.getId()} + '&followed=' + ${follow.isFollowed()}}" method="get">
+                <input type="hidden" name="id" th:value="${follow.getId()}" />
+                <input type="hidden" name="name" th:value="${follow.getName()}" />
+                <!-- Add more hidden input fields for other properties of the user object -->
+                <input type="hidden" name="followed" th:value="${follow.isFollowed()}" />
+                <button type="submit" class="follow-button" th:text="${follow.followed ? 'Following' : 'Follow'}"></button>
+                <!-- You can include hidden inputs here to send additional data with the form if needed -->
+            </form>
+
+        </div>
+
+        <!-- Add more follower items here -->
+    </div>
+</div>
+</body>
+</html>
